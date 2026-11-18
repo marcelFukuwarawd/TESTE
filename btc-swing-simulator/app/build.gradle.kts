@@ -4,6 +4,11 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
+// Keystore próprio é OPCIONAL: só é usado se KEYSTORE_PATH existir e não estiver
+// vazio. O workflow exporta KEYSTORE_PATH="" quando não há secrets de assinatura;
+// nesse caso o release é assinado com a chave debug do CI (instalável normalmente).
+val keystorePath: String? = System.getenv("KEYSTORE_PATH")?.takeIf { it.isNotBlank() }
+
 android {
     namespace = "com.btcswing.simulator"
     compileSdk = 34
@@ -19,9 +24,9 @@ android {
 
     signingConfigs {
         create("release") {
-            val path = System.getenv("KEYSTORE_PATH")
-            if (path != null) {
-                storeFile = file(path)
+            // Só configura se houver keystore próprio (caminho não-vazio).
+            if (keystorePath != null) {
+                storeFile = file(keystorePath)
                 storePassword = System.getenv("KEYSTORE_PASSWORD") ?: ""
                 keyAlias = System.getenv("KEY_ALIAS") ?: ""
                 keyPassword = System.getenv("KEY_PASSWORD") ?: ""
@@ -33,9 +38,7 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            // Assina com keystore próprio se os secrets existirem; senão, usa debug
-            // (APK instalável no Xiaomi 12T Pro de qualquer forma).
-            signingConfig = if (System.getenv("KEYSTORE_PATH") != null) {
+            signingConfig = if (keystorePath != null) {
                 signingConfigs.getByName("release")
             } else {
                 signingConfigs.getByName("debug")
@@ -46,7 +49,6 @@ android {
             versionNameSuffix = "-debug"
         }
     }
-
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
