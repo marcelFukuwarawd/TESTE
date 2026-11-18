@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BTC Swing Simulator</string>
+    <string name="widget_label">BTC Swing — Robô</string>
+    <string name="notif_channel_trading">Robô de trading (simulação)</string>
+    <string name="notif_channel_alerts">Alertas de operações</string>
+    <string name="notif_channel_report">Relatório diário</string>
+    <string name="notif_foreground_title">BTC Swing Simulator ativo</string>
+    <string name="notif_foreground_text">Analisando BTC/USDT • Simulação com dinheiro fictício</string>
+</resources>

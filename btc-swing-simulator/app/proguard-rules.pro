@@ -1,0 +1,2 @@
+-keep class com.btcswing.simulator.data.db.** { *; }
+-dontwarn androidx.**
